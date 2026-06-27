@@ -1,10 +1,11 @@
 import express from 'express';
 import mongoose from 'mongoose';
 import apiRoutes from './routes/api';
+import { connectDatabase, getMongoUri } from './database';
 
 const app = express();
 const port = 8000;
-const mongoUri = process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/octofit_db';
+const mongoUri = getMongoUri();
 
 export const getApiBaseUrl = (): string => {
   const codespaceName = process.env.CODESPACE_NAME;
@@ -13,8 +14,7 @@ export const getApiBaseUrl = (): string => {
     : 'http://localhost:8000';
 };
 
-mongoose
-  .connect(mongoUri)
+connectDatabase()
   .then(() => {
     console.log('Connected to MongoDB');
   })
